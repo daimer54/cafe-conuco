@@ -259,7 +259,24 @@
 <script>
   var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwS2XCB-NNeKk3ImkZdRtG0GBfWYSdDSddbE-YqjbuPXHEeZKtowy5xDrdF3AiuTGWh/exec';
   window.addEventListener('load', function(){
-    setTimeout(function(){ document.getElementById('prog-fill').style.width = '34%'; }, 300);
+    fetch(SCRIPT_URL)
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        var n = data.count || 0;
+        var total = 100;
+        document.getElementById('bags-count').textContent = n;
+        document.getElementById('bags-left').textContent = total - n;
+        document.getElementById('pct-display').textContent = n + '%';
+        document.getElementById('prog-text').textContent = n + ' de ' + total + ' bolsas';
+        setTimeout(function(){
+          document.getElementById('prog-fill').style.width = n + '%';
+        }, 300);
+      })
+      .catch(function(){
+        setTimeout(function(){
+          document.getElementById('prog-fill').style.width = '34%';
+        }, 300);
+      });
   });
   function setTier(val){
     var s = document.getElementById('opcion');
